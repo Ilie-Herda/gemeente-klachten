@@ -5,30 +5,35 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('complaints.create') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('home') }}">
+                        <x-application-logo class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    {{-- Home / Complaint form --}}
-                    <x-nav-link :href="route('complaints.create')" :active="request()->routeIs('complaints.*')">
+                    <!-- Home -->
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
 
-                    {{-- Admin dashboard, only visible for admins --}}
+                    <!-- Submit Complaint -->
+                    <x-nav-link :href="route('complaints.create')" :active="request()->routeIs('complaints.*')">
+                        {{ __('Submit Complaint') }}
+                    </x-nav-link>
+
+                    <!-- Admin Dashboard (only visible for admins) -->
                     @auth
                         @if(auth()->user()->is_admin)
                             <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
-                                {{ __('Admin') }}
+                                {{ __('Admin Dashboard') }}
                             </x-nav-link>
                         @endif
                     @endauth
                 </div>
             </div>
 
-            <!-- Right side (Auth links) -->
+            <!-- Right Side: Auth Links -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 @guest
                     <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-blue-600 mr-4">
@@ -55,7 +60,6 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- Profile -->
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
@@ -63,13 +67,15 @@
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
+
                                 <x-dropdown-link :href="route('logout')"
-                                                 onclick="event.preventDefault(); this.closest('form').submit();">
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
                     </x-dropdown>
+                @authend
                 @endauth
             </div>
 
@@ -91,24 +97,28 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation Menu (mobile) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <!-- Mobile main links -->
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('complaints.create')" :active="request()->routeIs('complaints.*')">
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Home') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('complaints.create')" :active="request()->routeIs('complaints.*')">
+                {{ __('Submit Complaint') }}
             </x-responsive-nav-link>
 
             @auth
                 @if(auth()->user()->is_admin)
                     <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
-                        {{ __('Admin') }}
+                        {{ __('Admin Dashboard') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth
         </div>
 
-        <!-- Responsive Auth / Profile -->
+        <!-- Mobile auth/profile -->
         @auth
             <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4">
@@ -121,11 +131,11 @@
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
 
-                    <!-- Logout -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
+
                         <x-responsive-nav-link :href="route('logout')"
-                                               onclick="event.preventDefault(); this.closest('form').submit();">
+                            onclick="event.preventDefault(); this.closest('form').submit();">
                             {{ __('Log Out') }}
                         </x-responsive-nav-link>
                     </form>

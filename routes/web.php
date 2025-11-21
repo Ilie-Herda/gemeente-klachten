@@ -7,9 +7,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminMiddleware;
 
 // ------------------------------------
-// Public: complaint submission (home)
+// Public: Home page
 // ------------------------------------
-Route::get('/', [ComplaintController::class, 'create'])
+Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+// Complaint form on its own URL
+Route::get('/complaints/create', [ComplaintController::class, 'create'])
     ->name('complaints.create');
 
 Route::post('/complaints', [ComplaintController::class, 'store'])
@@ -26,8 +31,8 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.index');
     }
 
-    // normal user goes to complaint form
-    return redirect()->route('complaints.create');
+    // normal user goes to home page
+    return redirect()->route('home');
 })->middleware(['auth'])->name('dashboard');
 
 // ------------------------------------
@@ -46,8 +51,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::delete('/admin/complaint/{id}', [AdminController::class, 'destroy'])
         ->name('admin.destroy');
 
-    Route::post('/admin/complaint/{id}/note', [AdminController::class, 'addNote'])->name('admin.addNote');
-
+    Route::post('/admin/complaint/{id}/note', [AdminController::class, 'addNote'])
+        ->name('admin.addNote');
 });
 
 // ------------------------------------
